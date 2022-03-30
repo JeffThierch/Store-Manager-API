@@ -71,7 +71,7 @@ describe('Testing Sales Services', () => {
       });
 
       after(() => {
-        sinon.stub(SalesModel.getById.restore()
+        SalesModel.getById.restore()
       });
 
       it('A error with "message": SALE_NOT_FOUND', async () => {
