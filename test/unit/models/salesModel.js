@@ -4,13 +4,11 @@ const { expect } = require('chai');
 const connection = require('../../../models/connection');
 const salesModel = require('../../../models/SalesModel');
 
+const {allSalesMock, mockedSales } = require('../helpers/mocks')
+
 describe('Sales Model Tests', () => {
   describe('getAll Method', () => {
     describe('When called correctly it should return', () => {
-      const allSalesMock = [
-        {saleId: 1, date: "2021-09-09T04:54:29.000Z", productId: 1, quantity: 2 },
-        { saleId: 1, date: "2021-09-09T04:54:54.000Z", productId: 2, quantity: 2 }
-      ];
 
       before(async () => {
         sinon.stub(connection, 'execute').resolves([allSalesMock]);
@@ -38,7 +36,6 @@ describe('Sales Model Tests', () => {
   describe('getById Method', () => {
 
     describe('When called correctly it should return', () => {
-      const mockedSales = [{saleId: 1, date: "2021-09-09T04:54:29.000Z", productId: 1, quantity: 2 }]
 
       before(async () => {
         sinon.stub(connection, 'execute').resolves([mockedSales]);

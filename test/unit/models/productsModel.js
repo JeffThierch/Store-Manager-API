@@ -4,14 +4,11 @@ const { expect } = require('chai');
 const connection = require('../../../models/connection');
 const productsModel = require('../../../models/ProductsModel');
 
+const {allProductsMock, mockedProduct} = require('../helpers/mocks')
+
 describe('Products Model Tests', () => {
   describe('getAll Method', () => {
     describe('When called correctly it should return', () => {
-      const allProductsMock = [
-        { id: 1, name: "produto A", quantity: 10 },
-        { id: 2, name: "produto B", quantity: 20 },
-        { id: 3, name: "produto C", quantity: 1 }
-      ];
 
       before(async () => {
         sinon.stub(connection, 'execute').resolves([allProductsMock]);
@@ -39,7 +36,6 @@ describe('Products Model Tests', () => {
   describe('getById Method', () => {
 
     describe('When called correctly it should return', () => {
-      const mockedProduct = [{ id: 1, name: "produto A", quantity: 10 }]
 
       before(async () => {
         sinon.stub(connection, 'execute').resolves([mockedProduct]);
