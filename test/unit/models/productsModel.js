@@ -39,10 +39,10 @@ describe('Products Model Tests', () => {
   describe('getById Method', () => {
 
     describe('When called correctly it should return', () => {
-      const mockedProduct = { id: 1, name: "produto A", quantity: 10 }
+      const mockedProduct = [{ id: 1, name: "produto A", quantity: 10 }]
 
       before(async () => {
-        sinon.stub(connection, 'execute').resolves({ id: 1, name: "produto A", quantity: 10 });
+        sinon.stub(connection, 'execute').resolves([mockedProduct]);
       });
 
       after(() => {
@@ -58,14 +58,14 @@ describe('Products Model Tests', () => {
       it('That containing "id", "name" and "quantity"', async () => {
         const product = await productsModel.getById(1);
 
-        expect(product).to.be.equals(mockedProduct);
+        expect(product).to.be.equals(mockedProduct[0]);
       })
 
     })
 
     describe("When wrongly called", () => {
       before(async () => {
-        sinon.stub(connection, 'execute').resolves([]);
+        sinon.stub(connection, 'execute').resolves([[]]);
       });
 
       after(() => {
