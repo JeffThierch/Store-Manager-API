@@ -2,7 +2,7 @@ const sinon = require('sinon');
 const { expect } = require('chai');
 
 const SalesModel = require('../../../models/SalesModel');
-const salesServices = require('../../../services/SalesServices');
+const salesServices = require('../../../services/salesServices');
 
 const {allSalesMock, mockedSales} = require('../helpers/mocks')
 
@@ -51,16 +51,16 @@ describe('Testing Sales Services', () => {
         expect(product).to.be.an('object');
       })
 
-      it('The Object should contain the property "id"', async () => {
+      it('The Object should contain the property "saleId"', async () => {
         const product = await salesServices.getById(1);
 
-        expect(product).to.haveOwnProperty('id');
+        expect(product).to.haveOwnProperty('saleId');
       })
 
       it('The key "id" should be equals the called param', async () => {
         const product = await salesServices.getById(1);
 
-        expect(product.id).to.be.equal(1);
+        expect(product.saleId).to.be.equal(1);
       })
 
     })
