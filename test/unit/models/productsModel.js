@@ -2,7 +2,7 @@ const sinon = require('sinon');
 const { expect } = require('chai');
 
 const connection = require('../../../models/connection');
-const productsModel = require('../../../models/productsModel')
+const productsModel = require('../../../models/ProductsModel');
 
 describe('Products Model Tests', () => {
   describe('getAll Method', () => {
@@ -14,7 +14,7 @@ describe('Products Model Tests', () => {
       ];
 
       before(async () => {
-        sinon.stub(connection, 'execute').resolves(allProductsMock)
+        sinon.stub(connection, 'execute').resolves([allProductsMock]);
       });
 
       after(() => {
@@ -22,13 +22,13 @@ describe('Products Model Tests', () => {
       });
 
       it('An array' , async () => {
-        const products = productsModel.getAll();
+        const products = await productsModel.getAll();
 
         expect(products).to.be.a('array')
       });
 
       it('containing 3 objects' , async () => {
-        const products = productsModel.getAll();
+        const products = await productsModel.getAll();
 
         expect(products).to.have.length(3)
         expect(products).to.be.equal(allProductsMock)
