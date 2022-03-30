@@ -35,4 +35,48 @@ describe('Products Model Tests', () => {
       });
     })
   })
+
+  describe('getById Method', () => {
+
+    describe('When called correctly it should return', () => {
+      const mockedProduct = { id: 1, name: "produto A", quantity: 10 }
+
+      before(async () => {
+        sinon.stub(connection, 'execute').resolves({ id: 1, name: "produto A", quantity: 10 });
+      });
+
+      after(() => {
+        connection.execute.restore();
+      });
+
+      it('An Object', async () => {
+        const product = await productsModel.getById(1);
+
+        expect(product).to.be.a('object')
+      })
+
+      it('That containing "id", "name" and "quantity"', async () => {
+        const product = await productsModel.getById(1);
+
+        expect(product).to.be.equals(mockedProduct);
+      })
+
+    })
+
+    describe("When wrongly called", () => {
+      before(async () => {
+        sinon.stub(connection, 'execute').resolves([]);
+      });
+
+      after(() => {
+        connection.execute.restore();
+      });
+
+      it('Should return "false"', async () => {
+        const product = await productsModel.getById(99);
+
+        expect(product).to.be.equal(false);
+      })
+    })
+  })
 })
