@@ -10,6 +10,11 @@ const orderArrayOfObjectByProperty = (array, property) => array.sort((a, b) => {
     return 0;
 });
 
+const Errors = {
+  PRODUCT_NOT_FOUND: { code: 404, message: 'Product not found' },
+};
+
 module.exports = {
   orderArrayOfObjectByProperty,
+  Errors,
 };
