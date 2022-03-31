@@ -43,10 +43,12 @@ describe('Testing productsController', () => {
 
       let fakeReq = {};
       let fakeRes = {};
+      let next = (err) => { console.log((err));}
 
       before(async () => {
         sinon.stub(productsServices, 'getById').resolves(mockedProduct[0]);
 
+        fakeReq.params = {id: 1}
         fakeRes.status = sinon.stub().returns(fakeRes);
         fakeRes.json = sinon.spy()
       })
@@ -56,7 +58,7 @@ describe('Testing productsController', () => {
       })
 
       it('the response code is called with code 200', async () => {
-        await productsController.getById(fakeReq, fakeRes);
+        await productsController.getById(fakeReq, fakeRes, next);
 
         expect(fakeRes.status.calledWith(200)).to.be.equal(true);
       })
@@ -72,11 +74,12 @@ describe('Testing productsController', () => {
 
       let fakeReq = {};
       let fakeRes = {};
-      let next = (_err) => {}
+      let next = (err) => { console.log((err));}
 
       before(async () => {
         sinon.stub(productsServices, 'getById').throws(new Error('PRODUCT_NOT_FOUND'));
 
+        fakeReq.params = {id: 99}
         fakeRes.status = sinon.stub().returns(fakeRes);
         fakeRes.json = sinon.spy()
         next = sinon.spy();
@@ -84,13 +87,13 @@ describe('Testing productsController', () => {
 
       after(() => {
         productsServices.getById.restore();
-        next.restore();
       })
 
       it('next function should be called with error object', async () => {
         await productsController.getById(fakeReq, fakeRes, next);
 
-        expect(next.calledWith(new Error('PRODUCT_NOT_FOUND'))).to.be.equal(true);
+        sinon.assert.callCount(next, 1)
+        sinon.assert.calledWith(next, 'PRODUCT_NOT_FOUND')
       })
 
     })
