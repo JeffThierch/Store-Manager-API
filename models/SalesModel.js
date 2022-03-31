@@ -75,8 +75,22 @@ const createSaleProduct = async (arrayOfProducts) => {
   };
 };
 
+const updateSale = async ({ id, arrayOfProducts }) => {
+  const query = 'UPDATE StoreManager.sales SET quantity = ? WHERE sale_id = ? AND product_id = ?;';
+
+  await Promise.all(arrayOfProducts.map(({ productId, quantity }) => (
+    connection.execute(query, [quantity, id, productId])
+  )));
+
+  return {
+    id,
+    itemUpdated: arrayOfProducts,
+  };
+};
+
 module.exports = {
   getAll,
   getById,
   createSaleProduct,
+  updateSale,
 };
