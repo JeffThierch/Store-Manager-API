@@ -8,7 +8,7 @@ const {allProductsMock, mockedProduct} = require('../helpers/mocks');
 
 describe('Testing productsController', () => {
   describe('getAll controller', () => {
-    describe('When called shoud return', () => {
+    describe('When called should return', () => {
 
       let fakeReq = {};
       let fakeRes = {};
@@ -35,6 +35,64 @@ describe('Testing productsController', () => {
 
         expect(fakeRes.json.calledWith(allProductsMock)).to.be.equal(true);
       })
+    })
+  })
+
+  describe('getById controller', () => {
+    describe('When correctly called should return', () => {
+
+      let fakeReq = {};
+      let fakeRes = {};
+
+      before(async () => {
+        sinon.stub(productsServices, 'getById').resolves(mockedProduct[0]);
+
+        fakeRes.status = sinon.stub().returns(fakeRes);
+        fakeRes.json = sinon.spy()
+      })
+
+      after(() => {
+        productsServices.getById.restore();
+      })
+
+      it('the response code is called with code 200', async () => {
+        await productsController.getById(fakeReq, fakeRes);
+
+        expect(fakeRes.status.calledWith(200)).to.be.equal(true);
+      })
+
+      it('are called json with the products array', async() => {
+        await productsController.getById(fakeReq, fakeRes);
+
+        expect(fakeRes.json.calledWith(mockedProduct[0])).to.be.equal(true);
+      })
+    })
+
+    describe('When the id dont exists should return', () => {
+
+      let fakeReq = {};
+      let fakeRes = {};
+      let next = (_err) => {}
+
+      before(async () => {
+        sinon.stub(productsServices, 'getById').throws(new Error('PRODUCT_NOT_FOUND'));
+
+        fakeRes.status = sinon.stub().returns(fakeRes);
+        fakeRes.json = sinon.spy()
+        next = sinon.spy();
+      })
+
+      after(() => {
+        productsServices.getById.restore();
+        next.restore();
+      })
+
+      it('next function should be called with error object', async () => {
+        await productsController.getById(fakeReq, fakeRes, next);
+
+        expect(next.calledWith(new Error('PRODUCT_NOT_FOUND'))).to.be.equal(true);
+      })
+
     })
   })
 })
