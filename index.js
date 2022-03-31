@@ -10,6 +10,14 @@ app.get('/', (_request, response) => {
   response.send();
 });
 
+const productsRoutes = require('./routes/productsRoutes');
+
+app.use('/products', productsRoutes);
+
+const salesRoutes = require('./routes/salesRoutes');
+
+app.use('/sales', salesRoutes);
+
 app.listen(process.env.PORT, () => {
   console.log(`Escutando na porta ${process.env.PORT}`);
 });
