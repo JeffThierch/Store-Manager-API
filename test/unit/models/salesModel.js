@@ -101,8 +101,9 @@ describe('Sales Model Tests', () => {
       after(() => {
         connection.execute.restore();
       });
+
       it('Should return a object with (id, itemsSold(Array))', async () => {
-        const newProduct = await salesModel.createSale(mockedCreateSaleArgs);
+        const newProduct = await salesModel.createSaleProduct(mockedCreateSaleArgs);
 
         expect(newProduct).to.be.eqls(mockedCreatedSale)
       })

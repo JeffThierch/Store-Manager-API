@@ -36,7 +36,7 @@ const createSaleMock = [{insertId: 1}]
 
 const mockedCreatedSale = { id: 1, itemsSold: [
     {productId: 1, quantity: 2},
-    {productId: 2, quantity: 2}
+    {productId: 2, quantity: 5}
   ]
 }
 
