@@ -4,7 +4,17 @@ const { expect } = require('chai');
 const connection = require('../../../models/connection');
 const salesModel = require('../../../models/SalesModel');
 
-const {allSalesMock, allSalesDBMock, mockedSalesByIdDB, mockedSalesById } = require('../helpers/mocks')
+const {
+  allSalesMock,
+  allSalesDBMock,
+  mockedSalesByIdDB,
+  mockedSalesById,
+  createSaleMock,
+  mockedCreatedSale,
+  mockedCreateSaleArgs,
+  mockedUpdateArgs,
+  mockedUpdateReturnValue
+} = require('../helpers/mocks')
 
 describe('Sales Model Tests', () => {
   describe('getAll Method', () => {
@@ -72,6 +82,47 @@ describe('Sales Model Tests', () => {
         const product = await salesModel.getById(99);
 
         expect(product).to.be.equal(false);
+      })
+    })
+  })
+
+  describe('createSale Method', () => {
+    describe('When correctly called', () => {
+      before(async () => {
+        sinon.stub(connection, 'execute')
+          .onFirstCall()
+          .resolves(createSaleMock)
+          .onSecondCall()
+          .resolves(createSaleMock)
+          .onThirdCall()
+          .resolves({insertId: 2})
+      });
+
+      after(() => {
+        connection.execute.restore();
+      });
+      it('Should return a object with (id, itemsSold(Array))', async () => {
+        const newProduct = await salesModel.createSale(mockedCreateSaleArgs);
+
+        expect(newProduct).to.be.eqls(mockedCreatedSale)
+      })
+    })
+  })
+
+  describe('updateSale Method', () => {
+    describe('When correctly called', () => {
+      before(async () => {
+        sinon.stub(connection, 'execute').resolves(true);
+      });
+
+      after(() => {
+        connection.execute.restore();
+      });
+      it('Should return a object with (saleId, itemUpdated(Array))', async () => {
+        const newProduct = await salesModel.updateSale(mockedUpdateArgs);
+
+        expect(newProduct).to.be.eqls(mockedUpdateReturnValue)
+
       })
     })
   })

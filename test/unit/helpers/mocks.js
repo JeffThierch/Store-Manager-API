@@ -32,6 +32,45 @@ const mockedSalesById = [
 
 const createProductMock = [{insertId: 1}]
 
+const createSaleMock = [{insertId: 1}]
+
+const mockedCreatedSale = { id: 1, itemsSold: [
+    {productId: 1, quantity: 2},
+    {productId: 2, quantity: 2}
+  ]
+}
+
+const mockedCreateSaleArgs = [
+  {
+    productId: 1,
+    quantity: 2
+  },
+  {
+    productId: 2,
+    quantity: 5
+  }
+]
+
+const mockedUpdateArgs = {
+  id: 1,
+  itemsToUpdate: [
+    {
+      productId: 1,
+      quantity: 6
+    }
+  ]
+}
+
+const mockedUpdateReturnValue =  {
+  saleId: 1,
+  itemUpdated: [
+    {
+      productId: 1,
+      quantity: 6
+    }
+  ]
+}
+
 
 module.exports = {
   allProductsMock,
@@ -40,5 +79,10 @@ module.exports = {
   allSalesMock,
   mockedSalesByIdDB,
   mockedSalesById,
-  createProductMock
+  createProductMock,
+  createSaleMock,
+  mockedCreatedSale,
+  mockedCreateSaleArgs,
+  mockedUpdateArgs,
+  mockedUpdateReturnValue
 }
