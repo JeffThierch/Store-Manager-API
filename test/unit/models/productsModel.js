@@ -4,7 +4,7 @@ const { expect } = require('chai');
 const connection = require('../../../models/connection');
 const productsModel = require('../../../models/ProductsModel');
 
-const {allProductsMock, mockedProduct} = require('../helpers/mocks')
+const {allProductsMock, mockedProduct, createProductMock} = require('../helpers/mocks')
 
 describe('Products Model Tests', () => {
   describe('getAll Method', () => {
@@ -72,6 +72,24 @@ describe('Products Model Tests', () => {
         const product = await productsModel.getById(99);
 
         expect(product).to.be.equal(false);
+      })
+    })
+  })
+
+  describe('createProduct method', () => {
+    describe('When correctly called', () => {
+      before(async () => {
+        sinon.stub(connection, 'execute').resolves(createProductMock);
+      });
+
+      after(() => {
+        connection.execute.restore();
+      });
+      it('Should return a object with (id, name, quantity)', async () => {
+        const newProduct = await productsModel.createProduct({name: 'produto01', quantity: 8});
+
+        expect(newProduct).to.be.eqls({ id: 1, name: 'produto01', quantity: 8 })
+
       })
     })
   })

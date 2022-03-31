@@ -30,6 +30,8 @@ const mockedSalesById = [
   {date: "2021-09-09T04:54:29.000Z", productId: 2, quantity: 2 }
 ];
 
+const createProductMock = [{insertId: 1}]
+
 
 module.exports = {
   allProductsMock,
@@ -37,5 +39,6 @@ module.exports = {
   allSalesDBMock,
   allSalesMock,
   mockedSalesByIdDB,
-  mockedSalesById
+  mockedSalesById,
+  createProductMock
 }
