@@ -49,7 +49,34 @@ const getById = async (id) => {
   return serializedData;
 };
 
+const createSale = async () => {
+  const query = 'INSERT INTO StoreManager.sales VALUES ()';
+
+  const [{ insertId }] = await connection.execute(query);
+
+  return insertId;
+};
+
+const createSaleProduct = async (arrayOfProducts) => {
+  const saleId = await createSale();
+
+  const query = `
+    INSERT INTO StoreManager.sales_products (sale_id, product_id, quantity)
+    VALUES (?, ?, ?);
+    `;
+
+  await Promise.all(arrayOfProducts.map(({ productId, quantity }) => (
+    connection.execute(query, [saleId, productId, quantity])
+    )));
+
+  return {
+    id: saleId,
+    itemsSold: arrayOfProducts,
+  };
+};
+
 module.exports = {
   getAll,
   getById,
+  createSaleProduct,
 };
