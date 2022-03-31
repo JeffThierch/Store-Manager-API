@@ -63,14 +63,14 @@ describe('Testing productsController', () => {
         expect(fakeRes.status.calledWith(200)).to.be.equal(true);
       })
 
-      it('are called json with the products array', async() => {
+      it('are called json with the product object', async() => {
         await productsController.getById(fakeReq, fakeRes);
 
         expect(fakeRes.json.calledWith(mockedProduct[0])).to.be.equal(true);
       })
     })
 
-    describe('When the id dont exists should return', () => {
+    describe('When the "id" dont exists should return', () => {
 
       let fakeReq = {};
       let fakeRes = {};
@@ -89,7 +89,7 @@ describe('Testing productsController', () => {
         productsServices.getById.restore();
       })
 
-      it('next function should be called with error object', async () => {
+      it('next function should be called with error message', async () => {
         await productsController.getById(fakeReq, fakeRes, next);
 
         sinon.assert.callCount(next, 1)
