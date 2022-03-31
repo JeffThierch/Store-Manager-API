@@ -9,13 +9,13 @@ describe('Testing errorController', () => {
 
       let fakeReq = {};
       let fakeRes = {};
-      let fakeErr = {}
+      let fakeErr = ''
       let next = (_err) => {}
 
       before(() => {
         fakeRes.status = sinon.stub().returns(fakeRes);
         fakeRes.json = sinon.spy();
-        fakeErr = sinon.stub().returns('PRODUCT_NOT_FOUND')
+        fakeErr = 'PRODUCT_NOT_FOUND'
       })
 
       it('the response code is called with code 404', async () => {
@@ -37,14 +37,14 @@ describe('Testing errorController', () => {
 
       let fakeReq = {};
       let fakeRes = {};
-      let fakeErr = {}
+      let fakeErr = ''
       let next = (_err) => { }
 
       before(() => {
         fakeReq.params = {id: 1}
         fakeRes.status = sinon.stub().returns(fakeRes);
         fakeRes.json = sinon.spy()
-        fakeErr = sinon.stub().returns('ANOTHER_ERROR')
+        fakeErr = 'ANOTHER_ERROR'
       })
 
       it('the response code is called with code 500', async () => {
@@ -56,7 +56,7 @@ describe('Testing errorController', () => {
       it('are called json with the message', async() => {
         await errorController(fakeErr, fakeReq, fakeRes, next);
 
-        expect(fakeRes.json.calledWith({message: 'Server error'})).to.be.equal(true);
+        expect(fakeRes.json.calledWith({ message: 'Server Error' })).to.be.equal(true);
       })
     })
   })
