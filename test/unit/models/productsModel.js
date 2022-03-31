@@ -76,7 +76,7 @@ describe('Products Model Tests', () => {
     })
   })
 
-  describe('createProduct method', () => {
+  describe('createProduct Method', () => {
     describe('When correctly called', () => {
       before(async () => {
         sinon.stub(connection, 'execute').resolves(createProductMock);
@@ -89,6 +89,24 @@ describe('Products Model Tests', () => {
         const newProduct = await productsModel.createProduct({name: 'produto01', quantity: 8});
 
         expect(newProduct).to.be.eqls({ id: 1, name: 'produto01', quantity: 8 })
+
+      })
+    })
+  })
+
+  describe('updateProduct Method', () => {
+    describe('When correctly called', () => {
+      before(async () => {
+        sinon.stub(connection, 'execute').resolves(true);
+      });
+
+      after(() => {
+        connection.execute.restore();
+      });
+      it('Should return a object with (id, name, quantity)', async () => {
+        const newProduct = await productsModel.createProduct({id: 1, name: 'newProduct', quantity: 10});
+
+        expect(newProduct).to.be.eqls({ id: 1, name: 'newProduct', quantity: 10 })
 
       })
     })
