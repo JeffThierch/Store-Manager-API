@@ -1,7 +1,7 @@
 const sinon = require('sinon');
 const { expect } = require('chai');
 
-const errorController = require('../../../controllers/errorController')
+const {errorController} = require('../../../controllers/errorController')
 
 describe('Testing errorController', () => {
   describe('Validation error', () => {

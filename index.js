@@ -18,6 +18,10 @@ const salesRoutes = require('./routes/salesRoutes');
 
 app.use('/sales', salesRoutes);
 
+const { errorController } = require('./controllers/errorController');
+
+app.use(errorController);
+
 app.listen(process.env.PORT, () => {
   console.log(`Escutando na porta ${process.env.PORT}`);
 });
