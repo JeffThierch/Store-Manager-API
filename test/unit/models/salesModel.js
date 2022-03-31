@@ -4,14 +4,14 @@ const { expect } = require('chai');
 const connection = require('../../../models/connection');
 const salesModel = require('../../../models/SalesModel');
 
-const {allSalesMock, mockedSales } = require('../helpers/mocks')
+const {allSalesMock, mockedSales, allSalesDBMock, mockedSalesDB } = require('../helpers/mocks')
 
 describe('Sales Model Tests', () => {
   describe('getAll Method', () => {
     describe('When called correctly it should return', () => {
 
       before(async () => {
-        sinon.stub(connection, 'execute').resolves([allSalesMock]);
+        sinon.stub(connection, 'execute').resolves([allSalesDBMock]);
       });
 
       after(() => {
@@ -28,7 +28,7 @@ describe('Sales Model Tests', () => {
         const products = await salesModel.getAll();
 
         expect(products).to.have.length(2)
-        expect(products).to.be.equal(allSalesMock)
+        expect(products).to.be.eql(allSalesMock)
       });
     })
   })
@@ -38,7 +38,7 @@ describe('Sales Model Tests', () => {
     describe('When called correctly it should return', () => {
 
       before(async () => {
-        sinon.stub(connection, 'execute').resolves([mockedSales]);
+        sinon.stub(connection, 'execute').resolves([mockedSalesDB]);
       });
 
       after(() => {
@@ -51,10 +51,10 @@ describe('Sales Model Tests', () => {
         expect(product).to.be.a('object')
       })
 
-      it('That containing "id", "name" and "quantity"', async () => {
+      it('That containing "saleId", "date", "productId" "quantity"', async () => {
         const product = await salesModel.getById(1);
 
-        expect(product).to.be.equals(mockedSales[0]);
+        expect(product).to.be.eql(mockedSales[0]);
       })
 
     })
