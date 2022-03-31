@@ -104,7 +104,7 @@ describe('Products Model Tests', () => {
         connection.execute.restore();
       });
       it('Should return a object with (id, name, quantity)', async () => {
-        const newProduct = await productsModel.createProduct({id: 1, name: 'newProduct', quantity: 10});
+        const newProduct = await productsModel.updateProduct({id: 1, name: 'newProduct', quantity: 10});
 
         expect(newProduct).to.be.eqls({ id: 1, name: 'newProduct', quantity: 10 })
 
