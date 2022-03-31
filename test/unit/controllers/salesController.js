@@ -4,7 +4,7 @@ const { expect } = require('chai');
 const salesController = require('../../../controllers/salesController')
 const salesServices = require('../../../services/salesServices');
 
-const {allSalesMock, mockedSales} = require('../helpers/mocks');
+const {allSalesMock, mockedSalesById} = require('../helpers/mocks');
 
 describe('Testing salesController', () => {
   describe('getAll controller', () => {
@@ -46,7 +46,7 @@ describe('Testing salesController', () => {
       let next = (err) => { console.log((err));}
 
       before(async () => {
-        sinon.stub(salesServices, 'getById').resolves(mockedSales[0]);
+        sinon.stub(salesServices, 'getById').resolves(mockedSalesById);
 
         fakeReq.params = {id: 1}
         fakeRes.status = sinon.stub().returns(fakeRes);
@@ -66,7 +66,7 @@ describe('Testing salesController', () => {
       it('are called json with the sale object', async() => {
         await salesController.getById(fakeReq, fakeRes);
 
-        expect(fakeRes.json.calledWith(mockedSales[0])).to.be.equal(true);
+        expect(fakeRes.json.calledWith(mockedSalesById)).to.be.equal(true);
       })
     })
 

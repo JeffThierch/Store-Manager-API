@@ -4,7 +4,7 @@ const { expect } = require('chai');
 const connection = require('../../../models/connection');
 const salesModel = require('../../../models/SalesModel');
 
-const {allSalesMock, mockedSales, allSalesDBMock, mockedSalesDB } = require('../helpers/mocks')
+const {allSalesMock, allSalesDBMock, mockedSalesByIdDB, mockedSalesById } = require('../helpers/mocks')
 
 describe('Sales Model Tests', () => {
   describe('getAll Method', () => {
@@ -38,23 +38,23 @@ describe('Sales Model Tests', () => {
     describe('When called correctly it should return', () => {
 
       before(async () => {
-        sinon.stub(connection, 'execute').resolves([mockedSalesDB]);
+        sinon.stub(connection, 'execute').resolves([mockedSalesByIdDB]);
       });
 
       after(() => {
         connection.execute.restore();
       });
 
-      it('An Object', async () => {
+      it('An array of object', async () => {
         const product = await salesModel.getById(1);
 
-        expect(product).to.be.a('object')
+        expect(product).to.be.a('array')
       })
 
-      it('That containing "saleId", "date", "productId" "quantity"', async () => {
+      it('That containing "date", "productId" "quantity"', async () => {
         const product = await salesModel.getById(1);
 
-        expect(product).to.be.eql(mockedSales[0]);
+        expect(product).to.be.eql(mockedSalesById);
       })
 
     })

@@ -4,7 +4,7 @@ const { expect } = require('chai');
 const SalesModel = require('../../../models/SalesModel');
 const salesServices = require('../../../services/salesServices');
 
-const {allSalesMock, mockedSales} = require('../helpers/mocks')
+const {allSalesMock, mockedSalesById} = require('../helpers/mocks')
 
 describe('Testing Sales Services', () => {
   describe('getAll method', () => {
@@ -38,29 +38,33 @@ describe('Testing Sales Services', () => {
 
     describe('When the id exists should return', () => {
       before(async () => {
-        sinon.stub(SalesModel, 'getById').resolves(mockedSales[0])
+        sinon.stub(SalesModel, 'getById').resolves(mockedSalesById)
       });
 
       after(() => {
         SalesModel.getById.restore()
       });
 
-      it('A object', async () => {
+      it('A array of objects', async () => {
         const product = await salesServices.getById(1);
 
-        expect(product).to.be.an('object');
+        expect(product).to.be.an('array');
+        expect(product[0]).to.be.an('object');
       })
 
-      it('The Object should contain the property "saleId"', async () => {
+      it('The Object should contain the property "productId"', async () => {
         const product = await salesServices.getById(1);
 
-        expect(product).to.haveOwnProperty('saleId');
+        expect(product).to.have.lengthOf(2);
+        expect(product[0]).to.haveOwnProperty('productId');
+        expect(product[1]).to.haveOwnProperty('productId');
       })
 
-      it('The key "id" should be equals the called param', async () => {
+      it('The key "productId" should be equals to "1" and "2"', async () => {
         const product = await salesServices.getById(1);
 
-        expect(product.saleId).to.be.equal(1);
+        expect(product[0].productId).to.be.equal(1);
+        expect(product[1].productId).to.be.equal(2);
       })
 
     })
