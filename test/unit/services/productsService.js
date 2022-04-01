@@ -133,7 +133,7 @@ describe('Testing ProductsServices', () => {
 
     it('"name" shorter then 5 characters should return "SHORT_NAME_FIELD"', async () => {
       try {
-        await productsServices.createProduct({name: 'Pro'});
+        await productsServices.createProduct({name: 'Pro', quantity: 2});
 
       }catch (err) {
         expect(err.message).to.be.equals('SHORT_NAME_FIELD')

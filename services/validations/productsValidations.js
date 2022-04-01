@@ -12,7 +12,7 @@ const validateCreateProductFields = ({ name, quantity }) => {
       throw new Error('UND_NAME_FIELD');
     case !validateIfQuantityExist(quantity):
       throw new Error('UND_QUANT_FIELD');
-    case !validateNameLength(quantity):
+    case !validateNameLength(name):
       throw new Error('SHORT_NAME_FIELD');
     case !validateQuantity(quantity):
       throw new Error('SHORT_QUANT_FIELD');
