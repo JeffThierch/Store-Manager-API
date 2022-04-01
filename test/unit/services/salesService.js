@@ -153,7 +153,7 @@ describe('Testing Sales Services', () => {
 
   })
 
-  describe('updateProduct Method', () => {
+  describe('updateSale Method', () => {
     describe('When correctly called should return', () => {
       before(() => {
         sinon.stub(SalesModel, 'updateSale').resolves(mockedUpdateReturnValue);
