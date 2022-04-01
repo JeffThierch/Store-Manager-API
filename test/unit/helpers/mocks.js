@@ -71,6 +71,8 @@ const mockedUpdateReturnValue =  {
   ]
 }
 
+const mockedUpdateProductReturn = {id: 1, name: 'New Product', quantity: 10}
+
 
 module.exports = {
   allProductsMock,
@@ -84,5 +86,6 @@ module.exports = {
   mockedCreatedSale,
   mockedCreateSaleArgs,
   mockedUpdateArgs,
-  mockedUpdateReturnValue
+  mockedUpdateReturnValue,
+  mockedUpdateProductReturn
 }

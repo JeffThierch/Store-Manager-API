@@ -4,7 +4,12 @@ const { expect } = require('chai');
 const productsModel = require('../../../models/ProductsModel');
 const productsServices = require('../../../services/productsServices');
 
-const {allProductsMock, mockedProduct} = require('../helpers/mocks')
+const {
+  allProductsMock,
+  mockedProduct,
+  mockedUpdateReturnValue,
+  mockedUpdateProductReturn
+  } = require('../helpers/mocks')
 
 describe('Testing ProductsServices', () => {
   describe('getAll method', () => {
@@ -149,6 +154,77 @@ describe('Testing ProductsServices', () => {
       }
     })
 
+  })
+
+  describe('updateProduct Method', () => {
+    describe('When correctly called should return', () => {
+      before(() => {
+        sinon.stub(productsModel, 'updateProduct').resolves(mockedUpdateProductReturn);
+      });
+
+      after(() => {
+        productsModel.updateProduct.restore()
+      })
+
+      it('A object (id, name, quantity)', () => {
+       const newSales = productsServices.updateProduct(mockedUpdateProductReturn)
+
+       expect(newSales).to.be.eqls(mockedUpdateProductReturn)
+      })
+    })
+
+    describe('When any field is incorrect should return a error', () => {
+      before(() => {
+        sinon.stub(productsModel, 'updateProduct').resolves(false);
+      });
+
+      after(() => {
+        productsModel.updateProduct.restore()
+      })
+
+      it('When "id" dont exist should return PRODUCT_NOT_FOUND ', async () => {
+        try {
+          sinon.stub(productsModel, 'getById').resolves(false);
+          await productsServices.updateProduct(mockedUpdateProductReturn)
+
+        }catch (err) {
+          productsModel.getById.restore();
+
+          expect(err.message).to.be.equal('PRODUCT_NOT_FOUND')
+
+        }
+      })
+
+      it('When "quantity" is shorter then 1 return SHORT_QUANT_FIELD ', async () => {
+        try {
+          sinon.stub(productsModel, 'getById').resolves(true);
+          await productsModel.updateProduct(
+            {...mockedUpdateProductReturn, quantity: 0 }
+            )
+
+        }catch (err) {
+          productsModel.getById.restore();
+
+          expect(err.message).to.be.equal('SHORT_QUANT_FIELD')
+
+        }
+      })
+
+      it('When "name" is shorter length then 5 return SHORT_NAME_FIELD ', async () => {
+        try {
+          sinon.stub(productsModel, 'getById').resolves(true);
+          await productsModel.updateProduct(
+            {...mockedUpdateProductReturn, name: 'Pro'}
+            )
+
+        }catch (err) {
+          productsModel.getById.restore();
+
+          expect(err.message).to.be.equal('SHORT_NAME_FIELD')
+
+        }
+      })
+    })
   })
 
 })

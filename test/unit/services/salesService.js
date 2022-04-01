@@ -207,20 +207,6 @@ describe('Testing Sales Services', () => {
         }
       })
 
-      it('When "quantity" is shorter then 1 return SHORT_QUANT_FIELD ', async () => {
-        try {
-          sinon.stub(SalesModel, 'getById').resolves(true);
-          await salesServices.updateSale(
-            {...mockedUpdateArgs, itemsToUpdate: [{productId: 1, quantity: 0 }]}
-            )
-
-        }catch (err) {
-          SalesModel.getById.restore();
-
-          expect(err.message).to.be.equal('SHORT_QUANT_FIELD')
-
-        }
-      })
     })
   })
 
