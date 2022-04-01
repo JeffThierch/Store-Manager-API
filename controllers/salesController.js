@@ -20,7 +20,7 @@ const getById = async (req, res, next) => {
 
 const createSale = async (req, res, next) => {
   try {
-    const { products } = req.body;
+    const products = req.body;
 
     const newSale = await salesServices.createSaleProduct(products);
 

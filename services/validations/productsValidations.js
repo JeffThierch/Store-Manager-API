@@ -2,7 +2,7 @@ const validateIfNameExist = (name) => name !== undefined;
 
 const validateIfQuantityExist = (quantity) => quantity !== undefined;
 
-const validateNameLength = (name) => name.length >= 1;
+const validateNameLength = (name) => name.length >= 5;
 
 const validateQuantity = (quantity) => quantity >= 1;
 

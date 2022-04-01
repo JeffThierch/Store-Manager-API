@@ -94,10 +94,12 @@ describe('Testing ProductsServices', () => {
     describe('When called correctly should return', () => {
       before(() => {
         sinon.stub(productsModel, 'createProduct').resolves(mockedProduct[0])
+        sinon.stub(productsModel, 'getByName').resolves(false)
       })
 
       after(() => {
         productsModel.createProduct.restore()
+        productsModel.getByName.restore()
       })
 
       it('Should return a object with (id, name, quantity)', async () => {
@@ -161,11 +163,13 @@ describe('Testing ProductsServices', () => {
       before(() => {
         sinon.stub(productsModel, 'updateProduct').resolves(mockedUpdateProductReturn);
         sinon.stub(productsModel, 'getById').resolves(true);
+        sinon.stub(productsModel, 'getByName').resolves(true);
       });
 
       after(() => {
         productsModel.updateProduct.restore()
         productsModel.getById.restore()
+        productsModel.getByName.restore()
       })
 
       it('A object (id, name, quantity)', async () => {

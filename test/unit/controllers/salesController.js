@@ -109,12 +109,10 @@ describe('Testing salesController', () => {
       before(async () => {
         sinon.stub(salesServices, 'createSaleProduct').resolves(mockedCreatedSale);
 
-        fakeReq.body = {
-          products: [
+        fakeReq.body = [
           {productId: 1, quantity: 2},
           {productId: 2, quantity: 5}
         ]
-      }
 
         fakeRes.status = sinon.stub().returns(fakeRes);
         fakeRes.json = sinon.spy()
@@ -151,12 +149,10 @@ describe('Testing salesController', () => {
 
       it('When "quantity" is undefined, next function should be called with UND_QUANT_FIELD', async () => {
         sinon.stub(salesServices, 'createSaleProduct').throws(new Error('UND_QUANT_FIELD'));
-        fakeReq.body = {
-          products: [
+        fakeReq.body =[
             {productId: 1},
             {productId: 2, quantity: 5}
-          ]
-        };
+          ];
 
         await salesController.createSale(fakeReq, fakeRes, next);
 
@@ -167,12 +163,10 @@ describe('Testing salesController', () => {
 
       it('When "quantity" shorter, then 1 should be called with SHORT_QUANT_FIELD', async () => {
         sinon.stub(salesServices, 'createSaleProduct').throws(new Error('SHORT_QUANT_FIELD'));
-        fakeReq.body = {
-          products:[
+        fakeReq.body = [
           {productId: 1, quantity: 1},
           {productId: 2, quantity: 0}
-        ]
-      };
+        ];
 
         await salesController.createSale(fakeReq, fakeRes, next);
 

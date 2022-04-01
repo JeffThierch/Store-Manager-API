@@ -20,6 +20,12 @@ const getById = async (id) => {
 const createProduct = async ({ name, quantity }) => {
   productValidations.validateCreateProductFields({ name, quantity });
 
+  const productExist = await productsModel.getByName(name);
+
+  if (productExist) {
+    throw new Error('PRODUCT_ALREADY_EXIST');
+  }
+
   const newProduct = await productsModel.createProduct({ name, quantity });
 
   return newProduct;
