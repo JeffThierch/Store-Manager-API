@@ -4,9 +4,9 @@ const validateIfQuantityExist = (quantity) => quantity !== undefined;
 
 const validateQuantity = (quantity) => quantity >= 1;
 
-const validateCreateSaleProductFields = ({ name, quantity }) => {
+const validateCreateSaleProductFields = ({ productId, quantity }) => {
   switch (true) {
-    case !validateIfProductIdExist(name):
+    case !validateIfProductIdExist(productId):
       throw new Error('UND_PRODUCT_ID_FIELD');
     case !validateIfQuantityExist(quantity):
       throw new Error('UND_QUANT_FIELD');
