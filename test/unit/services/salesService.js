@@ -4,7 +4,14 @@ const { expect } = require('chai');
 const SalesModel = require('../../../models/SalesModel');
 const salesServices = require('../../../services/salesServices');
 
-const {allSalesMock, mockedSalesById, mockedCreatedSale, mockedCreateSaleArgs} = require('../helpers/mocks')
+const {
+  allSalesMock,
+  mockedSalesById,
+  mockedCreatedSale,
+  mockedCreateSaleArgs,
+  mockedUpdateReturnValue,
+  mockedUpdateArgs
+} = require('../helpers/mocks')
 
 describe('Testing Sales Services', () => {
   describe('getAll method', () => {
@@ -105,45 +112,116 @@ describe('Testing Sales Services', () => {
         expect(newSale).to.be.eqls(mockedCreatedSale);
       })
     })
+
+    describe('When any field is incorrect should return a error', () => {
+
+      before(() => {
+        sinon.stub(SalesModel, 'createSaleProduct').resolves(false);
+      });
+
+      after(() => {
+        SalesModel.createSaleProduct.restore()
+      })
+
+      it('Undefined "productId" field should return "UND_PRODUCT_ID_FIELD"', async () => {
+        try {
+          await salesServices.createSaleProduct([{quantity: 10}, {quantity: 2}]);
+
+        }catch (err) {
+          expect(err.message).to.be.equals('UND_PRODUCT_ID_FIELD')
+        }
+      })
+
+      it('Undefined "quantity" field should return "UND_QUANT_FIELD"', async () => {
+        try {
+          await salesServices.createSaleProduct([{productId: 1}, {productId: 2}]);
+
+        }catch (err) {
+          expect(err.message).to.be.equals('UND_QUANT_FIELD')
+        }
+      })
+
+      it('When "quantity" is shorter then 1 should return "SHORT_QUANT_FIELD"', async () => {
+        try {
+          await salesServices.createSaleProduct([{productId: 1, quantity: 0}]);
+
+        }catch (err) {
+          expect(err.message).to.be.equals('SHORT_QUANT_FIELD')
+        }
+      })
+    })
+
   })
 
-  describe('When any field is incorrect should return a error', () => {
+  describe('updateProduct Method', () => {
+    describe('When correctly called should return', () => {
+      before(() => {
+        sinon.stub(SalesModel, 'updateSale').resolves(mockedUpdateReturnValue);
+      });
 
-    before(() => {
-      sinon.stub(SalesModel, 'createSaleProduct').resolves(false);
-    });
+      after(() => {
+        SalesModel.updateSale.restore()
+      })
 
-    after(() => {
-      SalesModel.createSaleProduct.restore()
+      it('A object (saleId, itemUpdated<Array>)', () => {
+       const newSales = salesServices.updateSale(mockedUpdateArgs)
+
+       expect(newSales).to.be.eqls(mockedUpdateReturnValue)
+      })
     })
 
-    it('Undefined "productId" field should return "UND_PRODUCT_ID_FIELD"', async () => {
-      try {
-        await salesServices.createSaleProduct([{quantity: 10}, {quantity: 2}]);
+    describe('When any field is incorrect should return a error', () => {
+      before(() => {
+        sinon.stub(SalesModel, 'updateSale').resolves(false);
+      });
 
-      }catch (err) {
-        expect(err.message).to.be.equals('UND_PRODUCT_ID_FIELD')
-      }
+      after(() => {
+        SalesModel.updateSale.restore()
+      })
+
+      it('When "id" dont exist should return SALE_NOT_FOUND ', async () => {
+        try {
+          sinon.stub(SalesModel, 'getById').resolves(false);
+          await salesServices.updateSale(mockedUpdateArgs)
+
+        }catch (err) {
+          SalesModel.getById.restore();
+
+          expect(err.message).to.be.equal('SALE_NOT_FOUND')
+
+        }
+      })
+
+      it('When "quantity" is shorter then 1 return SHORT_QUANT_FIELD ', async () => {
+        try {
+          sinon.stub(SalesModel, 'getById').resolves(true);
+          await salesServices.updateSale(
+            {...mockedUpdateArgs, itemsToUpdate: [{productId: 1, quantity: 0 }]}
+            )
+
+        }catch (err) {
+          SalesModel.getById.restore();
+
+          expect(err.message).to.be.equal('SHORT_QUANT_FIELD')
+
+        }
+      })
+
+      it('When "quantity" is shorter then 1 return SHORT_QUANT_FIELD ', async () => {
+        try {
+          sinon.stub(SalesModel, 'getById').resolves(true);
+          await salesServices.updateSale(
+            {...mockedUpdateArgs, itemsToUpdate: [{productId: 1, quantity: 0 }]}
+            )
+
+        }catch (err) {
+          SalesModel.getById.restore();
+
+          expect(err.message).to.be.equal('SHORT_QUANT_FIELD')
+
+        }
+      })
     })
-
-    it('Undefined "quantity" field should return "UND_QUANT_FIELD"', async () => {
-      try {
-        await salesServices.createSaleProduct([{productId: 1}, {productId: 2}]);
-
-      }catch (err) {
-        expect(err.message).to.be.equals('UND_QUANT_FIELD')
-      }
-    })
-
-    it('When "quantity" is shorter then 1 should return "SHORT_QUANT_FIELD"', async () => {
-      try {
-        await salesServices.createSaleProduct([{productId: 1, quantity: 0}]);
-
-      }catch (err) {
-        expect(err.message).to.be.equals('SHORT_QUANT_FIELD')
-      }
-    })
-
   })
 
 })
