@@ -21,6 +21,22 @@ const validateCreateProductFields = ({ name, quantity }) => {
   }
 };
 
+const validateUpdateProductFields = ({ name, quantity }) => {
+  switch (true) {
+    case !validateIfNameExist(name):
+      throw new Error('UND_NAME_FIELD');
+    case !validateNameLength(name):
+      throw new Error('SHORT_NAME_FIELD');
+    case !validateIfQuantityExist(quantity):
+      throw new Error('UND_QUANT_FIELD');
+    case !validateQuantity(quantity):
+      throw new Error('SHORT_QUANT_FIELD');
+    default:
+      return true;
+  }
+};
+
 module.exports = {
   validateCreateProductFields,
+  validateUpdateProductFields,
 };

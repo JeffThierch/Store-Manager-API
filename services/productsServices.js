@@ -25,8 +25,22 @@ const createProduct = async ({ name, quantity }) => {
   return newProduct;
 };
 
+const updateProduct = async ({ id, name, quantity }) => {
+  const productExist = await productsModel.getById(id);
+  productValidations.validateUpdateProductFields({ name, quantity });
+
+  if (!productExist) {
+    throw new Error('PRODUCT_NOT_FOUND');
+  }
+
+  const newProduct = await productsModel.updateProduct({ id, name, quantity });
+
+  return newProduct;
+};
+
 module.exports = {
   getAll,
   getById,
   createProduct,
+  updateProduct,
 };
