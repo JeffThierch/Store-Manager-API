@@ -98,4 +98,96 @@ describe('Testing productsController', () => {
 
     })
   })
+
+  describe('createProduct controller', () => {
+    describe('When correctly called should return', () => {
+
+      let fakeReq = {};
+      let fakeRes = {};
+      let next = (_err) => {}
+
+      before(async () => {
+        sinon.stub(productsServices, 'createProduct').resolves(mockedProduct[0]);
+
+        fakeReq.body = {name: 'produto A', quantity: 10}
+        fakeRes.status = sinon.stub().returns(fakeRes);
+        fakeRes.json = sinon.spy()
+      })
+
+      after(() => {
+        productsServices.getById.restore();
+      })
+
+      it('the response code is called with code 201', async () => {
+        await productsController.createProduct(fakeReq, fakeRes, next);
+
+        expect(fakeRes.status.calledWith(201)).to.be.equal(true);
+      })
+
+      it('are called json with the product object', async() => {
+        await productsController.getById(fakeReq, fakeRes);
+
+        expect(fakeRes.json.calledWith(mockedProduct[0])).to.be.equal(true);
+      })
+    })
+
+    describe('When some field is wrong', () => {
+
+      let fakeReq = {};
+      let fakeRes = {};
+      let next = (err) => { console.log((err));}
+
+      before(async () => {
+        fakeRes.status = sinon.stub().returns(fakeRes);
+        fakeRes.json = sinon.spy()
+        next = sinon.spy();
+      })
+
+      after(() => {
+        productsServices.createProduct.restore();
+      })
+
+      it('When "name" is undefined, next function should be called with UND_NAME_FIELD', async () => {
+        fakeReq.body = {quantity: 10};
+        sinon.stub(productsServices, 'createProduct').throws(new Error('UND_NAME_FIELD'));
+
+        await productsController.createProduct(fakeReq, fakeRes, next);
+
+        sinon.assert.callCount(next, 1)
+        sinon.assert.calledWith(next, 'UND_NAME_FIELD')
+      })
+
+      it('When "quantity" is undefined, next function should be called with UND_QUANT_FIELD', async () => {
+        fakeReq.body = {name: 'Produto A'};
+        sinon.stub(productsServices, 'createProduct').throws(new Error('UND_QUANT_FIELD'));
+
+        await productsController.createProduct(fakeReq, fakeRes, next);
+
+        sinon.assert.callCount(next, 1)
+        sinon.assert.calledWith(next, 'UND_QUANT_FIELD')
+      })
+
+      it('When "quantity" shorter, then 1 should be called with SHORT_QUANT_FIELD', async () => {
+        fakeReq.body = {name: 'Produto A', quantity: 0};
+        sinon.stub(productsServices, 'createProduct').throws(new Error('SHORT_QUANT_FIELD'));
+
+        await productsController.createProduct(fakeReq, fakeRes, next);
+
+        sinon.assert.callCount(next, 1)
+        sinon.assert.calledWith(next, 'SHORT_QUANT_FIELD')
+      })
+
+      it('When "name" length is shorter, then 5 should be called with SHORT_NAME_FIELD', async () => {
+        fakeReq.body = {name: 'Produto A', quantity: 0};
+        sinon.stub(productsServices, 'createProduct').throws(new Error('SHORT_NAME_FIELD'));
+
+        await productsController.createProduct(fakeReq, fakeRes, next);
+
+        sinon.assert.callCount(next, 1)
+        sinon.assert.calledWith(next, 'SHORT_NAME_FIELD')
+      })
+
+    })
+  })
+
 })
