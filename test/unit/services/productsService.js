@@ -58,7 +58,7 @@ describe('Testing ProductsServices', () => {
       })
 
       it('The key "id" should be equals the called param', async () => {
-        const product = await productsServices.getById(1);onst product = await productsServices.getById(1);
+        const product = await productsServices.getById(1);
 
         expect(product.id).to.be.equal(1);
       })
