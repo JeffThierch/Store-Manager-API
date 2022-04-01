@@ -109,10 +109,12 @@ describe('Testing salesController', () => {
       before(async () => {
         sinon.stub(salesServices, 'createSaleProduct').resolves(mockedCreatedSale);
 
-        fakeReq.body = [
+        fakeReq.body = {
+          products: [
           {productId: 1, quantity: 2},
           {productId: 2, quantity: 5}
         ]
+      }
 
         fakeRes.status = sinon.stub().returns(fakeRes);
         fakeRes.json = sinon.spy()
@@ -139,7 +141,7 @@ describe('Testing salesController', () => {
 
       let fakeReq = {};
       let fakeRes = {};
-      let next = (err) => { console.log((err));}
+      let next = (_err) => {}
 
       before(async () => {
         fakeRes.status = sinon.stub().returns(fakeRes);
@@ -147,33 +149,35 @@ describe('Testing salesController', () => {
         next = sinon.spy();
       })
 
-      after(() => {
-        salesController.createProduct.restore();
-      })
-
       it('When "quantity" is undefined, next function should be called with UND_QUANT_FIELD', async () => {
-        fakeReq.body = [
-          {productId: 1},
-          {productId: 2, quantity: 5}
-        ];
         sinon.stub(salesServices, 'createSaleProduct').throws(new Error('UND_QUANT_FIELD'));
+        fakeReq.body = {
+          products: [
+            {productId: 1},
+            {productId: 2, quantity: 5}
+          ]
+        };
 
-        await salesController.createProduct(fakeReq, fakeRes, next);
+        await salesController.createSale(fakeReq, fakeRes, next);
 
-        sinon.assert.callCount(next, 1)
+        salesServices.createSaleProduct.restore();
+
         sinon.assert.calledWith(next, 'UND_QUANT_FIELD')
       })
 
       it('When "quantity" shorter, then 1 should be called with SHORT_QUANT_FIELD', async () => {
-        fakeReq.body = [
+        sinon.stub(salesServices, 'createSaleProduct').throws(new Error('SHORT_QUANT_FIELD'));
+        fakeReq.body = {
+          products:[
           {productId: 1, quantity: 1},
           {productId: 2, quantity: 0}
-        ];
-        sinon.stub(salesServices, 'createSaleProduct').throws(new Error('SHORT_QUANT_FIELD'));
+        ]
+      };
 
-        await salesController.createProduct(fakeReq, fakeRes, next);
+        await salesController.createSale(fakeReq, fakeRes, next);
 
-        sinon.assert.callCount(next, 1)
+        salesServices.createSaleProduct.restore();
+
         sinon.assert.calledWith(next, 'SHORT_QUANT_FIELD')
       })
 

@@ -107,6 +107,7 @@ describe('Testing Sales Services', () => {
       })
 
       it('Should return a object with (id, itemsSold<Array>)', async () => {
+
         const newSale = await salesServices.createSaleProduct(mockedCreateSaleArgs);
 
         expect(newSale).to.be.eqls(mockedCreatedSale);
