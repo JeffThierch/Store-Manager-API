@@ -27,11 +27,12 @@ const createProduct = async ({ name, quantity }) => {
 
 const updateProduct = async ({ id, name, quantity }) => {
   const productExist = await productsModel.getById(id);
-  productValidations.validateUpdateProductFields({ name, quantity });
 
   if (!productExist) {
     throw new Error('PRODUCT_NOT_FOUND');
   }
+
+  productValidations.validateUpdateProductFields({ name, quantity });
 
   const newProduct = await productsModel.updateProduct({ id, name, quantity });
 

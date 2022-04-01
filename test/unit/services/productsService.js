@@ -160,14 +160,16 @@ describe('Testing ProductsServices', () => {
     describe('When correctly called should return', () => {
       before(() => {
         sinon.stub(productsModel, 'updateProduct').resolves(mockedUpdateProductReturn);
+        sinon.stub(productsModel, 'getById').resolves(true);
       });
 
       after(() => {
         productsModel.updateProduct.restore()
+        productsModel.getById.restore()
       })
 
-      it('A object (id, name, quantity)', () => {
-       const newSales = productsServices.updateProduct(mockedUpdateProductReturn)
+      it('A object (id, name, quantity)', async () => {
+       const newSales = await productsServices.updateProduct(mockedUpdateProductReturn)
 
        expect(newSales).to.be.eqls(mockedUpdateProductReturn)
       })
@@ -187,6 +189,7 @@ describe('Testing ProductsServices', () => {
           sinon.stub(productsModel, 'getById').resolves(false);
           await productsServices.updateProduct(mockedUpdateProductReturn)
 
+          productsModel.getById.restore();
         }catch (err) {
           productsModel.getById.restore();
 
@@ -202,6 +205,7 @@ describe('Testing ProductsServices', () => {
             {...mockedUpdateProductReturn, quantity: 0 }
             )
 
+          productsModel.getById.restore();
         }catch (err) {
           productsModel.getById.restore();
 
@@ -216,7 +220,7 @@ describe('Testing ProductsServices', () => {
           await productsModel.updateProduct(
             {...mockedUpdateProductReturn, name: 'Pro'}
             )
-
+          productsModel.getById.restore();
         }catch (err) {
           productsModel.getById.restore();
 
@@ -224,6 +228,36 @@ describe('Testing ProductsServices', () => {
 
         }
       })
+
+      it('When "name" is undefined should return UND_NAME_FIELD ', async () => {
+        try {
+          sinon.stub(productsModel, 'getById').resolves(true);
+
+          await productsModel.updateProduct({id: 1, quantity: 10})
+
+          productsModel.getById.restore();
+        }catch (err) {
+          productsModel.getById.restore();
+
+          expect(err.message).to.be.equal('UND_NAME_FIELD')
+
+        }
+      })
+
+      it('When "quantity" is undefined should return UND_QUANT_FIELD ', async () => {
+        try {
+          sinon.stub(productsModel, 'getById').resolves(true);
+
+          await productsModel.updateProduct({id: 1, name: 'produto'})
+
+          productsModel.getById.restore();
+        }catch (err) {
+          productsModel.getById.restore();
+
+          expect(err.message).to.be.equal('UND_QUANT_FIELD')
+        }
+      })
+
     })
   })
 

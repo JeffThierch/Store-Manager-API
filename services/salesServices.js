@@ -27,8 +27,25 @@ const createSaleProduct = async (salesArray) => {
   return newSale;
 };
 
+const updateSale = async ({ id, itemsToUpdate }) => {
+  const saleExist = await salesModel.getById(id);
+
+  if (!saleExist) {
+    throw new Error('SALE_NOT_FOUND');
+  }
+
+  itemsToUpdate.forEach((item) => {
+    salesValidations.validateUpdateSaleFields(item);
+  });
+
+  const newSale = await salesModel.updateSale({ id, itemsToUpdate });
+
+  return newSale;
+};
+
 module.exports = {
   getAll,
   getById,
   createSaleProduct,
+  updateSale,
 };

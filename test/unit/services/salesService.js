@@ -157,14 +157,16 @@ describe('Testing Sales Services', () => {
     describe('When correctly called should return', () => {
       before(() => {
         sinon.stub(SalesModel, 'updateSale').resolves(mockedUpdateReturnValue);
+        sinon.stub(SalesModel, 'getById').resolves(true);
       });
 
       after(() => {
         SalesModel.updateSale.restore()
+        SalesModel.getById.restore()
       })
 
-      it('A object (saleId, itemUpdated<Array>)', () => {
-       const newSales = salesServices.updateSale(mockedUpdateArgs)
+      it('A object (saleId, itemUpdated<Array>)', async () => {
+       const newSales = await salesServices.updateSale(mockedUpdateArgs)
 
        expect(newSales).to.be.eqls(mockedUpdateReturnValue)
       })
@@ -184,6 +186,7 @@ describe('Testing Sales Services', () => {
           sinon.stub(SalesModel, 'getById').resolves(false);
           await salesServices.updateSale(mockedUpdateArgs)
 
+          SalesModel.getById.restore();
         }catch (err) {
           SalesModel.getById.restore();
 
@@ -197,12 +200,29 @@ describe('Testing Sales Services', () => {
           sinon.stub(SalesModel, 'getById').resolves(true);
           await salesServices.updateSale(
             {...mockedUpdateArgs, itemsToUpdate: [{productId: 1, quantity: 0 }]}
-            )
+          )
 
+          SalesModel.getById.restore();
         }catch (err) {
           SalesModel.getById.restore();
 
           expect(err.message).to.be.equal('SHORT_QUANT_FIELD')
+
+        }
+      })
+
+      it('When "quantity" undefined should return UND_QUANT_FIELD ', async () => {
+        try {
+          sinon.stub(SalesModel, 'getById').resolves(true);
+          await salesServices.updateSale(
+            {...mockedUpdateArgs, itemsToUpdate: [{productId: 1}]}
+          )
+
+          SalesModel.getById.restore();
+        }catch (err) {
+          SalesModel.getById.restore();
+
+          expect(err.message).to.be.equal('UND_QUANT_FIELD')
 
         }
       })

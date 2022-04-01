@@ -17,6 +17,18 @@ const validateCreateSaleProductFields = ({ productId, quantity }) => {
   }
 };
 
+const validateUpdateSaleFields = ({ quantity }) => {
+  switch (true) {
+    case !validateIfQuantityExist(quantity):
+      throw new Error('UND_QUANT_FIELD');
+    case !validateQuantity(quantity):
+      throw new Error('SHORT_QUANT_FIELD');
+    default:
+      return true;
+  }
+};
+
 module.exports = {
   validateCreateSaleProductFields,
+  validateUpdateSaleFields,
 };
