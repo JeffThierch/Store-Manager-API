@@ -4,7 +4,7 @@ const { expect } = require('chai');
 const SalesModel = require('../../../models/SalesModel');
 const salesServices = require('../../../services/salesServices');
 
-const {allSalesMock, mockedSalesById} = require('../helpers/mocks')
+const {allSalesMock, mockedSalesById, mockedCreatedSale, mockedCreateSaleArgs} = require('../helpers/mocks')
 
 describe('Testing Sales Services', () => {
   describe('getAll method', () => {
@@ -87,6 +87,63 @@ describe('Testing Sales Services', () => {
 
       })
     })
+  })
+
+  describe("createSale Method", () => {
+    describe('When called correctly should return', () => {
+      before(() => {
+        sinon.stub(SalesModel, 'createSaleProduct').resolves(mockedCreatedSale)
+      })
+
+      after(() => {
+        SalesModel.createSaleProduct.restore()
+      })
+
+      it('Should return a object with (id, itemsSold<Array>)', async () => {
+        const newSale = await salesServices.createSaleProduct(mockedCreateSaleArgs);
+
+        expect(newSale).to.be.eqls(mockedCreatedSale);
+      })
+    })
+  })
+
+  describe('When any field is incorrect should return a error', () => {
+
+    before(() => {
+      sinon.stub(SalesModel, 'createSaleProduct').resolves(false);
+    });
+
+    after(() => {
+      SalesModel.createSaleProduct.restore()
+    })
+
+    it('Undefined "productId" field should return "UND_PRODUCT_ID_FIELD"', async () => {
+      try {
+        await salesServices.createSaleProduct([{quantity: 10}, {quantity: 2}]);
+
+      }catch (err) {
+        expect(err.message).to.be.equals('UND_PRODUCT_ID_FIELD')
+      }
+    })
+
+    it('Undefined "quantity" field should return "UND_QUANT_FIELD"', async () => {
+      try {
+        await salesServices.createSaleProduct([{productId: 1}, {productId: 2}]);
+
+      }catch (err) {
+        expect(err.message).to.be.equals('UND_QUANT_FIELD')
+      }
+    })
+
+    it('When "quantity" is shorter then 1 should return "SHORT_QUANT_FIELD"', async () => {
+      try {
+        await salesServices.createSaleProduct([{productId: 1, quantity: 0}]);
+
+      }catch (err) {
+        expect(err.message).to.be.equals('SHORT_QUANT_FIELD')
+      }
+    })
+
   })
 
 })
