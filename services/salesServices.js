@@ -1,4 +1,5 @@
 const salesModel = require('../models/SalesModel');
+const salesValidations = require('./validations/salesValidations');
 
 const getAll = async () => {
   const sales = await salesModel.getAll();
@@ -16,7 +17,18 @@ const getById = async (id) => {
   return sale;
 };
 
+const createSaleProduct = async (salesArray) => {
+  salesArray.forEach((product) => {
+    salesValidations.validateCreateSaleProductFields(product);
+  });
+
+  const newSale = await salesModel.createSaleProduct(salesArray);
+
+  return newSale;
+};
+
 module.exports = {
   getAll,
   getById,
+  createSaleProduct,
 };
