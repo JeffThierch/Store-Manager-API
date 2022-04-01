@@ -4,7 +4,7 @@ const { expect } = require('chai');
 const salesController = require('../../../controllers/salesController')
 const salesServices = require('../../../services/salesServices');
 
-const {allSalesMock, mockedSalesById} = require('../helpers/mocks');
+const {allSalesMock, mockedSalesById, mockedCreatedSale} = require('../helpers/mocks');
 
 describe('Testing salesController', () => {
   describe('getAll controller', () => {
@@ -98,4 +98,86 @@ describe('Testing salesController', () => {
 
     })
   })
+
+  describe('createSale controller', () => {
+    describe('When correctly called should return', () => {
+
+      let fakeReq = {};
+      let fakeRes = {};
+      let next = (_err) => {}
+
+      before(async () => {
+        sinon.stub(salesServices, 'createSaleProduct').resolves(mockedCreatedSale);
+
+        fakeReq.body = [
+          {productId: 1, quantity: 2},
+          {productId: 2, quantity: 5}
+        ]
+
+        fakeRes.status = sinon.stub().returns(fakeRes);
+        fakeRes.json = sinon.spy()
+      })
+
+      after(() => {
+        salesServices.createSaleProduct.restore();
+      })
+
+      it('the response code is called with code 201', async () => {
+        await salesController.createSale(fakeReq, fakeRes, next);
+
+        expect(fakeRes.status.calledWith(201)).to.be.equal(true);
+      })
+
+      it('are called json with the product object', async() => {
+        await salesController.createSale(fakeReq, fakeRes);
+
+        expect(fakeRes.json.calledWith(mockedCreatedSale)).to.be.equal(true);
+      })
+    })
+
+    describe('When some field is wrong', () => {
+
+      let fakeReq = {};
+      let fakeRes = {};
+      let next = (err) => { console.log((err));}
+
+      before(async () => {
+        fakeRes.status = sinon.stub().returns(fakeRes);
+        fakeRes.json = sinon.spy()
+        next = sinon.spy();
+      })
+
+      after(() => {
+        salesController.createProduct.restore();
+      })
+
+      it('When "quantity" is undefined, next function should be called with UND_QUANT_FIELD', async () => {
+        fakeReq.body = [
+          {productId: 1},
+          {productId: 2, quantity: 5}
+        ];
+        sinon.stub(salesServices, 'createSaleProduct').throws(new Error('UND_QUANT_FIELD'));
+
+        await salesController.createProduct(fakeReq, fakeRes, next);
+
+        sinon.assert.callCount(next, 1)
+        sinon.assert.calledWith(next, 'UND_QUANT_FIELD')
+      })
+
+      it('When "quantity" shorter, then 1 should be called with SHORT_QUANT_FIELD', async () => {
+        fakeReq.body = [
+          {productId: 1, quantity: 1},
+          {productId: 2, quantity: 0}
+        ];
+        sinon.stub(salesServices, 'createSaleProduct').throws(new Error('SHORT_QUANT_FIELD'));
+
+        await salesController.createProduct(fakeReq, fakeRes, next);
+
+        sinon.assert.callCount(next, 1)
+        sinon.assert.calledWith(next, 'SHORT_QUANT_FIELD')
+      })
+
+    })
+  })
+
 })
