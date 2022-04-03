@@ -18,7 +18,6 @@ const getById = async (id) => {
 };
 
 const createSaleProduct = async (salesArray) => {
-  console.log(salesArray);
   salesArray.forEach((product) => {
     salesValidations.validateCreateSaleProductFields(product);
   });
