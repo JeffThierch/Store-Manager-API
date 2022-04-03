@@ -19,7 +19,7 @@ const getById = async (id) => {
 
 const createSaleProduct = async (salesArray) => {
   salesArray.forEach((product) => {
-    salesValidations.validateCreateSaleProductFields(product);
+    salesValidations.validateSaleProductFields(product);
   });
 
   const newSale = await salesModel.createSaleProduct(salesArray);
@@ -35,7 +35,7 @@ const updateSale = async ({ id, itemsToUpdate }) => {
   }
 
   itemsToUpdate.forEach((item) => {
-    salesValidations.validateUpdateSaleFields(item);
+    salesValidations.validateSaleProductFields(item);
   });
 
   const newSale = await salesModel.updateSale({ id, itemsToUpdate });

@@ -8,7 +8,7 @@ const errorController = (err, _req, res, _next) => {
 
     return res.status(code).json({ message });
   }
-
+  console.log(err);
   return res.status(500).json({ message: 'Server Error' });
 };
 
