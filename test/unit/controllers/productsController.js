@@ -4,7 +4,11 @@ const { expect } = require('chai');
 const productsController = require('../../../controllers/productsController')
 const productsServices = require('../../../services/productsServices');
 
-const {allProductsMock, mockedProduct} = require('../helpers/mocks');
+const {
+  allProductsMock,
+  mockedProduct,
+  mockedUpdateProductReturn
+  } = require('../helpers/mocks');
 
 describe('Testing productsController', () => {
   describe('getAll controller', () => {
@@ -185,6 +189,117 @@ describe('Testing productsController', () => {
         productsServices.createProduct.restore();
 
         sinon.assert.calledWith(next, 'SHORT_NAME_FIELD')
+      })
+
+    })
+  })
+
+  describe('updateProduct controller', () => {
+    describe('When correctly called should return', () => {
+
+      let fakeReq = {};
+      let fakeRes = {};
+      let next = (_err) => {}
+
+      before(async () => {
+        sinon.stub(productsServices, 'updateProduct').resolves(mockedUpdateProductReturn);
+
+        fakeReq.body = {name: 'New Product', quantity: 10};
+
+        fakeReq.params = { id: 1 }
+
+        fakeRes.status = sinon.stub().returns(fakeRes);
+        fakeRes.json = sinon.spy()
+      })
+
+      after(() => {
+        productsServices.updateProduct.restore();
+      })
+
+      it('the response code is called with code 200', async () => {
+        await productsController.updateProduct(fakeReq, fakeRes, next);
+
+        expect(fakeRes.status.calledWith(200)).to.be.equal(true);
+      })
+
+      it('are called json with the updatedProduct object', async() => {
+        await productsController.updateSale(fakeReq, fakeRes);
+
+        expect(fakeRes.json.calledWith(mockedUpdateProductReturn)).to.be.equal(true);
+      })
+    })
+
+    describe('When some field is wrong', () => {
+
+      let fakeReq = {};
+      let fakeRes = {};
+      let next = (_err) => {}
+
+      before(async () => {
+        fakeRes.status = sinon.stub().returns(fakeRes);
+        fakeRes.json = sinon.spy()
+        fakeReq.params = { id: 1 }
+        next = sinon.spy();
+      })
+
+      it('When "quantity" is undefined, next function should be called with UND_QUANT_FIELD', async () => {
+        sinon.stub(productsServices, 'updateProduct').throws(new Error('UND_QUANT_FIELD'));
+
+        fakeReq.body = {name: 'Product 01'};
+
+        await productsController.updateProduct(fakeReq, fakeRes, next);
+
+        productsServices.updateProduct.restore();
+
+        sinon.assert.calledWith(next, 'UND_QUANT_FIELD')
+      })
+
+      it('When "quantity" shorter, then 1 should be called with SHORT_QUANT_FIELD', async () => {
+        sinon.stub(productsServices, 'updateProduct').throws(new Error('SHORT_QUANT_FIELD'));
+
+        fakeReq.body = {name: 'Product 01', quantity: 0};
+
+        await productsController.updateProduct(fakeReq, fakeRes, next);
+
+        productsServices.updateProduct.restore();
+
+        sinon.assert.calledWith(next, 'SHORT_QUANT_FIELD')
+      });
+
+      it('When "name" is undefined, next function should be called with UND_NAME_FIELD', async () => {
+        sinon.stub(productsServices, 'updateProduct').throws(new Error('UND_NAME_FIELD'));
+
+        fakeReq.body = {quantity: 0};
+
+        await productsController.updateProduct(fakeReq, fakeRes, next);
+
+        productsServices.updateProduct.restore();
+
+        sinon.assert.calledWith(next, 'UND_NAME_FIELD')
+      })
+
+      it('When "name" shorter, then 5 should be called with SHORT_NAME_FIELD', async () => {
+        sinon.stub(productsServices, 'updateProduct').throws(new Error('SHORT_NAME_FIELD'));
+
+        fakeReq.body = {name: 'Pro', quantity: 5};
+
+        await productsController.updateProduct(fakeReq, fakeRes, next);
+
+        productsServices.updateProduct.restore();
+
+        sinon.assert.calledWith(next, 'SHORT_NAME_FIELD')
+      });
+
+      it('When the "id" dont exist, should be called with PRODUCT_NOT_FOUND', async () => {
+        sinon.stub(productsServices, 'updateProduct').throws(new Error('PRODUCT_NOT_FOUND'));
+
+        fakeReq.body = {name: 'Product 01', quantity: 5};
+
+        await productsController.updateProduct(fakeReq, fakeRes, next);
+
+        productsServices.updateProduct.restore();
+
+        sinon.assert.calledWith(next, 'PRODUCT_NOT_FOUND')
       })
 
     })
