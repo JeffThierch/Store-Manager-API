@@ -223,7 +223,7 @@ describe('Testing productsController', () => {
       })
 
       it('are called json with the updatedProduct object', async() => {
-        await productsController.updateSale(fakeReq, fakeRes);
+        await productsController.updateProduct(fakeReq, fakeRes);
 
         expect(fakeRes.json.calledWith(mockedUpdateProductReturn)).to.be.equal(true);
       })
