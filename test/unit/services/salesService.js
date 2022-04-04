@@ -3,6 +3,7 @@ const { expect } = require('chai');
 
 const SalesModel = require('../../../models/SalesModel');
 const salesServices = require('../../../services/salesServices');
+const salesValidations = require('../../../services/validations/salesValidations')
 
 const {
   allSalesMock,
@@ -100,10 +101,12 @@ describe('Testing Sales Services', () => {
     describe('When called correctly should return', () => {
       before(() => {
         sinon.stub(SalesModel, 'createSaleProduct').resolves(mockedCreatedSale)
+        sinon.stub(salesValidations, 'validateProductQuantity').resolves([true])
       })
 
       after(() => {
         SalesModel.createSaleProduct.restore()
+        salesValidations.validateProductQuantity.restore()
       })
 
       it('Should return a object with (id, itemsSold<Array>)', async () => {
@@ -118,6 +121,8 @@ describe('Testing Sales Services', () => {
 
       before(() => {
         sinon.stub(SalesModel, 'createSaleProduct').resolves(false);
+        sinon.stub(salesValidations, 'validateProductQuantity').resolves([true])
+        salesValidations.validateProductQuantity.restore()
       });
 
       after(() => {
@@ -224,7 +229,6 @@ describe('Testing Sales Services', () => {
           SalesModel.getById.restore();
 
           expect(err.message).to.be.equal('UND_QUANT_FIELD')
-
         }
       })
 
