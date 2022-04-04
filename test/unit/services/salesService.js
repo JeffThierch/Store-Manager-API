@@ -235,10 +235,12 @@ describe('Testing Sales Services', () => {
     describe('When correctly called', () => {
       before(() => {
         sinon.stub(SalesModel, 'deleteSale').resolves(true);
+        sinon.stub(SalesModel, 'getById').resolves(true);
       });
 
       after(() => {
         SalesModel.deleteSale.restore();
+        SalesModel.getById.restore();
       });
 
       it('Should return "true"', async () => {

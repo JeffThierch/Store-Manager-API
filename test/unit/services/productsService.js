@@ -269,10 +269,12 @@ describe('Testing ProductsServices', () => {
     describe('When correctly called', () => {
       before(() => {
         sinon.stub(productsModel, 'deleteProduct').resolves(true);
+        sinon.stub(productsModel, 'getById').resolves(true);
       });
 
       after(() => {
         productsModel.deleteProduct.restore();
+        productsModel.getById.restore();
       });
 
       it('Should return "true"', async () => {
