@@ -265,4 +265,41 @@ describe('Testing ProductsServices', () => {
     })
   })
 
+  describe('deleteProduct Method', () => {
+    describe('When correctly called', () => {
+      before(() => {
+        sinon.stub(productsModel, 'deleteProduct').resolves(true);
+      });
+
+      after(() => {
+        productsModel.deleteProduct.restore();
+      });
+
+      it('Should return "true"', async () => {
+        const deletedProduct = await productsServices.deleteProduct(1);
+
+        expect(deletedProduct).to.be.equal(true);
+      })
+    })
+
+    describe('When wrongly called', () => {
+      before(() => {
+        sinon.stub(productsModel, 'getById').resolves(false);
+      });
+
+      after(() => {
+        productsModel.getById.restore();
+      });
+
+      it('Should throw error PRODUCT_NOT_FOUND ', async () => {
+        try {
+          await productsServices.deleteProduct(1);
+        } catch (err) {
+          expect(err.message).to.be.equal('PRODUCT_NOT_FOUND');
+        }
+      })
+      
+    })
+  })
+
 })
