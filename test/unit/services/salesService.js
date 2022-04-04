@@ -231,4 +231,41 @@ describe('Testing Sales Services', () => {
     })
   })
 
+  describe('deleteSale Method', () => {
+    describe('When correctly called', () => {
+      before(() => {
+        sinon.stub(SalesModel, 'deleteSale').resolves(true);
+      });
+
+      after(() => {
+        SalesModel.deleteSale.restore();
+      });
+
+      it('Should return "true"', async () => {
+        const deletedSale = await salesServices.deleteSale(1);
+
+        expect(deletedSale).to.be.equal(true);
+      })
+    })
+
+    describe('When wrongly called', () => {
+      before(() => {
+        sinon.stub(SalesModel, 'getById').resolves(false);
+      });
+
+      after(() => {
+        SalesModel.getById.restore();
+      });
+
+      it('Should throw error SALE_NOT_FOUND ', async () => {
+        try {
+          await salesServices.deleteSale(1);
+        } catch (err) {
+          expect(err.message).to.be.equal('SALE_NOT_FOUND');
+        }
+      })
+      
+    })
+  })
+
 })
