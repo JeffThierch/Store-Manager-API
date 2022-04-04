@@ -1,4 +1,5 @@
 const connection = require('./connection');
+const ProductModel = require('./ProductsModel');
 
 const serialize = (saleData, withId = true) => {
   if (withId) {
@@ -69,6 +70,10 @@ const createSaleProduct = async (arrayOfProducts) => {
     connection.execute(query, [saleId, productId, quantity])
     )));
 
+  await Promise.all(arrayOfProducts.map(({ productId, quantity }) => (
+    ProductModel.updateProductQuantity({ id: productId, quantity })
+  )));
+
   return {
     id: saleId,
     itemsSold: arrayOfProducts,
@@ -94,6 +99,12 @@ const updateSale = async ({ id, itemsToUpdate }) => {
 
 const deleteSale = async (id) => {
   const query = 'DELETE FROM StoreManager.sales WHERE id = ?;';
+
+  const salesData = await getById(id);
+
+  await Promise.all(salesData.map(({ productId, quantity }) => (
+     ProductModel.updateProductQuantity({ id: productId, quantity, isDeleting: true })
+  )));
 
   await connection.execute(query, [id]);
 
