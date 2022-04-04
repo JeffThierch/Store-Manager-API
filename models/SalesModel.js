@@ -34,13 +34,13 @@ const getAll = async () => {
 
 const getById = async (id) => {
   const query = `
-    SELECT sp.sale_id, s.date, sp.product_id, sp.quantity
-    FROM StoreManager.sales_products AS sp
-    LEFT JOIN sales AS s ON s.id = sp.sale_id
-    WHERE sp.sale_id = ?
-    ORDER BY sp.sale_id ASC, sp.product_id ASC;
+  SELECT sp.sale_id, s.date, sp.product_id, sp.quantity
+  FROM StoreManager.sales_products AS sp
+  LEFT JOIN sales AS s ON s.id = sp.sale_id
+  WHERE sp.sale_id = ?
+  ORDER BY sp.sale_id ASC, sp.product_id ASC;
   `;
-
+  
   const [sales] = await connection.execute(query, [id]);
 
   if (!sales.length) return false;

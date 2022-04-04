@@ -3,6 +3,7 @@ const { expect } = require('chai');
 
 const connection = require('../../../models/connection');
 const salesModel = require('../../../models/SalesModel');
+const productsModel = require('../../../models/ProductsModel')
 
 const {
   allSalesMock,
@@ -89,6 +90,7 @@ describe('Sales Model Tests', () => {
   describe('createSale Method', () => {
     describe('When correctly called', () => {
       before(async () => {
+        sinon.stub(productsModel, 'updateProductQuantity').resolves(true);
         sinon.stub(connection, 'execute')
           .onFirstCall()
           .resolves(createSaleMock)
@@ -100,6 +102,7 @@ describe('Sales Model Tests', () => {
 
       after(() => {
         connection.execute.restore();
+        productsModel.updateProductQuantity.restore()
       });
 
       it('Should return a object with (id, itemsSold(Array))', async () => {
@@ -130,11 +133,19 @@ describe('Sales Model Tests', () => {
   describe('deleteSale Method', () => {
     describe('When correctly called', () => {
       before(async () => {
-        sinon.stub(connection, 'execute').resolves(true);
+        sinon.stub(connection, 'execute')
+        .onFirstCall()
+        .resolves([mockedSalesById])
+        .onSecondCall()
+        .resolves(true);
+
+        sinon.stub(productsModel, 'updateProductQuantity').resolves(true);
+
       });
   
       after(() => {
         connection.execute.restore();
+        productsModel.updateProductQuantity.restore()
       });
 
       it('Should return "true"', async () => {
