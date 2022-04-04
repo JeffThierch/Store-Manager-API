@@ -130,4 +130,60 @@ describe('Products Model Tests', () => {
     })
   })
 
+  describe('getByName Method', () => {
+    describe('When correctly called', () => {
+      before(() => {
+        sinon.stub(connection, 'execute').resolves([[{id: 1, name: 'Produto A'}]])
+      })
+
+      after(() => {
+        connection.execute.restore()
+      })
+
+      it('Should return the product with same "name"', async () => {
+        const productByName = await productsModel.getByName('Produto A');
+
+        expect(productByName).to.be.eqls({id: 1, name: 'Produto A'})
+      })
+    })
+
+    describe('When the product dont exist ', () => {
+      before(() => {
+        sinon.stub(connection, 'execute').resolves([[]])
+      })
+
+      after(() => {
+        connection.execute.restore()
+      })
+
+      it('Should return "false"', async () => {
+        const productByName = await productsModel.getByName('Produto A');
+
+        expect(productByName).to.be.eqls(false)
+      })
+    })
+  })
+
+  describe('updateProductQuantity Method', () => {
+    describe('When correctly called', () => {
+      before(() => {
+        sinon.stub(connection, 'execute')
+        .onFirstCall()
+        .resolves([{quantity: 5}])
+        .onSecondCall()
+        .resolves([[]])
+      });
+
+      after(() => {
+        connection.execute.restore()
+      });
+
+      it('Shoud return a Object contain de "id" and "quantity"', async () => {
+        const product = await productsModel.updateProductQuantity({id: 1, quantity: 2})
+
+        expect(product).to.be.eqls({id: 1, quantity: 2})
+      })
+    })
+  })
+
 })

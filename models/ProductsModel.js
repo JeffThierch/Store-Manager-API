@@ -15,7 +15,7 @@ const getByName = async (name) => {
 
   if (!product.length) return false;
 
-  return product;
+  return product[0];
 };
 
 const getById = async (id) => {

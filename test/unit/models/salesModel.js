@@ -157,7 +157,5 @@ describe('Sales Model Tests', () => {
     })
   })
 
-  
-
 })
 
