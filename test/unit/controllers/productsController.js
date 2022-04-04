@@ -305,4 +305,62 @@ describe('Testing productsController', () => {
     })
   })
 
+  describe('deleteProduct Controller', () => {
+    describe('When correctly called should return', () => {
+
+      let fakeReq = {};
+      let fakeRes = {};
+      let next = (_err) => {}
+
+      before(async () => {
+        sinon.stub(productsServices, 'deleteProduct').resolves(true);
+
+        fakeReq.params = { id: 1 }
+
+        fakeRes.status = sinon.stub().returns(fakeRes);
+        fakeRes.json = sinon.spy()
+      })
+
+      after(() => {
+        productsServices.deleteProduct.restore();
+      })
+
+      it('the response code is called with code 204', async () => {
+        await productsController.deleteProduct(fakeReq, fakeRes, next);
+
+        expect(fakeRes.status.calledWith(204)).to.be.equal(true);
+      })
+
+      it('are called json a empty object', async() => {
+        await productsController.deleteProduct(fakeReq, fakeRes, next);
+
+        expect(fakeRes.json.calledWith({})).to.be.equal(true);
+      })
+    })
+
+    describe('When wrongly called', () => {
+
+      let fakeReq = {};
+      let fakeRes = {};
+      let next = (_err) => {}
+
+      before(() => {
+        sinon.stub(productsServices, 'deleteProduct').throws('PRODUCT_NOT_FOUND');
+
+        fakeReq.params = { id: 99 }
+        fakeRes.status = sinon.stub().returns(fakeRes);
+        fakeRes.json = sinon.spy()
+      })
+
+      after(() => {
+        productsServices.deleteProduct.restore();
+      })
+
+      it('When "id" dont exist "next" should been called with SALE_NOT_FOUND', async () => {
+        await productsController.deleteProduct(fakeReq, fakeRes, next);
+        sinon.assert.calledWith(next, 'PRODUCT_NOT_FOUND')
+      })
+    })
+  })
+
 })
