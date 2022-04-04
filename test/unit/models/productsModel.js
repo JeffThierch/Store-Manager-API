@@ -122,7 +122,7 @@ describe('Products Model Tests', () => {
         connection.execute.restore();
       });
       it('Should return  "true"', async () => {
-        const deletedProduct = await productsModel.deleteProduct(id);
+        const deletedProduct = await productsModel.deleteProduct(1);
 
         expect(deletedProduct).to.be.equal(true)
 

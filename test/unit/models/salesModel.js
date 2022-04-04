@@ -123,9 +123,30 @@ describe('Sales Model Tests', () => {
         const newProduct = await salesModel.updateSale(mockedUpdateArgs);
 
         expect(newProduct).to.be.eqls(mockedUpdateReturnValue)
+      })
+    })
+  });
 
+  describe('deleteSale Method', () => {
+    describe('When correctly called', () => {
+      before(async () => {
+        sinon.stub(connection, 'execute').resolves(true);
+      });
+  
+      after(() => {
+        connection.execute.restore();
+      });
+
+      it('Should return "true"', async () => {
+        const deletedSale = await salesModel.deleteSale(1);
+  
+        expect(deletedSale).to.be.equal(true)
+  
       })
     })
   })
+
+  
+
 })
 
