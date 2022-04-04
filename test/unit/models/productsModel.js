@@ -111,4 +111,23 @@ describe('Products Model Tests', () => {
       })
     })
   })
+
+  describe('deleteProduct Method', () => {
+    describe('When correctly called', () => {
+      before(async () => {
+        sinon.stub(connection, 'execute').resolves(true);
+      });
+
+      after(() => {
+        connection.execute.restore();
+      });
+      it('Should return  "true"', async () => {
+        const deletedProduct = await productsModel.deleteProduct(id);
+
+        expect(deletedProduct).to.be.equal(true)
+
+      })
+    })
+  })
+
 })
