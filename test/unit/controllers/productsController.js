@@ -319,6 +319,7 @@ describe('Testing productsController', () => {
 
         fakeRes.status = sinon.stub().returns(fakeRes);
         fakeRes.json = sinon.spy()
+        next = sinon.spy();
       })
 
       after(() => {
@@ -345,11 +346,12 @@ describe('Testing productsController', () => {
       let next = (_err) => {}
 
       before(() => {
-        sinon.stub(productsServices, 'deleteProduct').throws('PRODUCT_NOT_FOUND');
+        sinon.stub(productsServices, 'deleteProduct').throws(new Error('PRODUCT_NOT_FOUND'));
 
         fakeReq.params = { id: 99 }
         fakeRes.status = sinon.stub().returns(fakeRes);
         fakeRes.json = sinon.spy()
+        next = sinon.spy();
       })
 
       after(() => {

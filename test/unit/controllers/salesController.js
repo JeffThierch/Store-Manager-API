@@ -292,6 +292,7 @@ describe('Testing salesController', () => {
 
         fakeRes.status = sinon.stub().returns(fakeRes);
         fakeRes.json = sinon.spy()
+        next = sinon.spy();
       })
 
       after(() => {
@@ -318,11 +319,12 @@ describe('Testing salesController', () => {
       let next = (_err) => {}
 
       before(() => {
-        sinon.stub(salesServices, 'deleteSale').throws('SALE_NOT_FOUND');
+        sinon.stub(salesServices, 'deleteSale').throws(new Error('SALE_NOT_FOUND'));
 
         fakeReq.params = { id: 99 }
         fakeRes.status = sinon.stub().returns(fakeRes);
         fakeRes.json = sinon.spy()
+        next = sinon.spy();
       })
 
       after(() => {
