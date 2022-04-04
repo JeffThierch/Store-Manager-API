@@ -22,6 +22,14 @@ const createSaleProduct = async (salesArray) => {
     salesValidations.validateSaleProductFields(product);
   });
 
+  const isQuantityValid = await Promise.all(
+    salesArray.map(((product) => salesValidations.validateProductQuantity(product))),
+  );
+
+  if (isQuantityValid.some((quantity) => quantity === false)) {
+    throw new Error('INVALID_SELL_AMOUNT');
+  }
+
   const newSale = await salesModel.createSaleProduct(salesArray);
 
   return newSale;

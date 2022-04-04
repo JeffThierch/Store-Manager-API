@@ -1,3 +1,5 @@
+const productModel = require('../../models/ProductsModel');
+
 const validateIfProductIdExist = (productId) => productId !== undefined;
 
 const validateIfQuantityExist = (quantity) => quantity !== undefined;
@@ -17,6 +19,17 @@ const validateSaleProductFields = ({ productId, quantity }) => {
   }
 };
 
+const validateProductQuantity = async ({ productId, quantity }) => {
+  const product = await productModel.getById(productId);
+
+  if ((product.quantity - quantity) < 0) {
+    return false;
+  }
+
+  return true;
+};
+
 module.exports = {
   validateSaleProductFields,
+  validateProductQuantity,
 };
