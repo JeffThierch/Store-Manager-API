@@ -1,0 +1,23 @@
+version: '3.3'
+
+services:
+  mysql: 
+    image: mysql:5.7
+    container_name: mysql-db
+    restart: unless-stopped
+    ports:
+      - $DB_PORT:$DB_PORT
+    volumes:
+      - db:/var/lib/mysql
+    env_file:
+      - ./.env
+    environment:
+      - MYSQL_ROOT_PASSWORD=$DB_PASSWORD
+    networks:
+      - backend
+
+networks:
+  backend:
+
+volumes:
+  db:
