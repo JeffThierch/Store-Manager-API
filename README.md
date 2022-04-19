@@ -29,4 +29,4 @@ For this project the following technologies were used:
   ~~~bash
   docker-compose up --build
   ~~~
-11. If everything is configured correctly, after the build process you can simply access the application.
+5. If everything is configured correctly, after the build process you can simply access the application.
