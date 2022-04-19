@@ -17,16 +17,33 @@ For this project the following technologies were used:
 ## How to Use:
 
 1. Clone the repository
+
   ~~~bash
   git clone git@github.com:JeffThierch/Store-Manager-API.git
   ~~~
 
-2. In the root of the project change the .env_example file to .env
+2. Install the dependencies:
 
-3. (Optional) - Change the environment variables.
-
-4. Run the command:
-  ~~~bash
-  docker-compose up --build
+ ~~~bash
+  npm install
   ~~~
-5. If everything is configured correctly, after the build process you can simply access the application.
+
+3. In the root of the project change the .env_example file to .env
+
+4. (Optional) - Change the environment variables.
+
+5. In the root of project run the commands:
+
+  ~~~bash
+  docker-compose up
+  ~~~
+
+6. Execute the StoreManager query in your favorite SQL editor
+
+7. Run in the projects root:
+
+  ~~~bash
+  npm start
+  ~~~
+
+8. If everything is configured correctly, after the build process you can simply access the application.
